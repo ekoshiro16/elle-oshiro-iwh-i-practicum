@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const app = express();
+require('dotenv').config(); 
 
 app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
@@ -48,24 +49,41 @@ app.post('/update', async (req, res) => {
             "favorite_book": req.body.newVal
         }
     }
-
     const email = req.query.email;
     const updateContact = `https://api.hubapi.com/crm/v3/objects/contacts/${email}?idProperty=email`;
     const headers = {
         Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
         'Content-Type': 'application/json'
     };
-
     try { 
         await axios.patch(updateContact, update, { headers } );
         res.redirect('back');
     } catch(err) {
         console.error(err);
     }
-
 });
 */
+app.post('/create', async (req, res) => {
+    const update = {
+        properties: {
+            name: req.body.name,
+            "germination_time": req.body.germination_time,
+            "sunlight_hour_requirements": req.body.sunlight_hour_requirements
+        }
+    };
 
+    const newRecord = `https://api.hubapi.com/crm/v3/objects/2-35075905`;
+    const headers = {
+        Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
+        "Content-Type": 'application/json'
+    };
+    try {
+        await axios.post(newRecord, update, { headers });
+        res.redirect('/'); 
+    } catch (error) {
+        console.error(error); 
+    }
+})
 
 // * Localhost
 app.listen(3000, () => console.log('Listening on http://localhost:3000'));
