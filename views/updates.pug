@@ -1,9 +1,19 @@
 doctype html
-html 
-    head 
-        title Update Custom Object Form | Integrating With HubSpot I Practicum
-        meta(name="viewport" content="width=device-width, initial-scale=1")
+html
+    head
+        title Update Custom Object Form | Integrating With HubSpot I Practicum. 
         link(rel="stylesheet", href="/css/style.css")
-    body    
-        h1 Update Custom Object Form | Integrating With HubSpot I Practicum
-        a(href='/') Return to the homepage
+    body
+    form(method="POST" action="/create" class="styled-form")
+        label(for="name" class="form-label") Plant Name
+        input(type="text" name="name" required class="form-input")
+
+        label(for="germination_time" class="form-label") Germination Time
+        input(type="text" name="germination_time" required class="form-input")
+
+        label(for="sunlight_hour_requirements" class="form-label") Hourly Sunlight Requirements? 
+        input(type="text" name="sunlight_hour_requirements" required class="form-input")
+
+        input(type="submit" value="Submit" class="form-submit")
+
+        a(href="/") Return to the homepage

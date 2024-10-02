@@ -1,0 +1,20 @@
+doctype html
+html
+  head
+    title Updating Your Plants | Integrating With HubSpot I Practicum
+    link(rel="stylesheet", href="/css/style.css")
+  body
+    h1 Your Plants
+    a(href="/create") Add To This Table
+    table
+      thead
+        tr
+          th Name
+          th Germination Time
+          th Sunlight Requirements
+      tbody
+        each plant in plants
+          tr
+            td= plant.properties.name
+            td= plant.properties.germination_time
+            td= plant.properties.sunlight_hour_requirements

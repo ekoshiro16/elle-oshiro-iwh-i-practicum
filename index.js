@@ -14,14 +14,63 @@ const PRIVATE_APP_ACCESS = '';
 // TODO: ROUTE 1 - Create a new app.get route for the homepage to call your custom object data. Pass this data along to the front-end and create a new pug template in the views folder.
 
 // * Code for Route 1 goes here
+app.get('/', async (req, res) => {
+    const plantsUrl = 'https://api.hubspot.com/crm/v3/objects/2-35075905?properties=name,germination_time,sunlight_hour_requirements';
+    const headers = {
+        Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
+        'Content-Type': 'application/json'
+    };
+    const body = {
+        properties: {
+            name: req.body.name,
+            "germination_time": req.body.germination_time,
+            "sunlight_hour_requirements": req.body.sunlight_hour_requirements
+        }
+    };
+   try {
+    const response = await axios.get(plantsUrl, { headers, body });
+    const plantData = response.data.results;
+    res.render('homepage', { plants: plantData })
+   } catch (error) {
+    console.error(error); 
+   } 
+});
 
 // TODO: ROUTE 2 - Create a new app.get route for the form to create or update new custom object data. Send this data along in the next route.
 
 // * Code for Route 2 goes here
+app.get('/create', async (req, res) => {
+    try {
+        res.render('updates', { title: 'Update Custom Object Form | Integrating With HubSpot I Practicum'});
+    } catch (error) {
+        console.error(error); 
+    };
+});
 
 // TODO: ROUTE 3 - Create a new app.post route for the custom objects form to create or update your custom object data. Once executed, redirect the user to the homepage.
 
 // * Code for Route 3 goes here
+app.post('/create', async (req, res) => {
+    const update = {
+        properties: {
+            name: req.body.name,
+            "germination_time": req.body.germination_time,
+            "sunlight_hour_requirements": req.body.sunlight_hour_requirements
+        }
+    };
+
+    const newRecord = `https://api.hubapi.com/crm/v3/objects/2-35075905`;
+    const headers = {
+        Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
+        "Content-Type": 'application/json'
+    };
+    try {
+        await axios.post(newRecord, update, { headers });
+        res.redirect('/'); 
+    } catch (error) {
+        console.error(error); 
+    };
+});
 
 /** 
 * * This is sample code to give you a reference for how you should structure your calls. 
@@ -63,27 +112,6 @@ app.post('/update', async (req, res) => {
     }
 });
 */
-app.post('/create', async (req, res) => {
-    const update = {
-        properties: {
-            name: req.body.name,
-            "germination_time": req.body.germination_time,
-            "sunlight_hour_requirements": req.body.sunlight_hour_requirements
-        }
-    };
-
-    const newRecord = `https://api.hubapi.com/crm/v3/objects/2-35075905`;
-    const headers = {
-        Authorization: `Bearer ${process.env.AUTH_TOKEN}`,
-        "Content-Type": 'application/json'
-    };
-    try {
-        await axios.post(newRecord, update, { headers });
-        res.redirect('/'); 
-    } catch (error) {
-        console.error(error); 
-    }
-})
 
 // * Localhost
 app.listen(3000, () => console.log('Listening on http://localhost:3000'));
